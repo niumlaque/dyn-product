@@ -3,10 +3,10 @@ A crate that creates cartesian product of size determined at runtime.
 If the size is determined at compile time, it is better to use `itertools::iproduct!`.
 
 # Usage
-Add dependency to your toml.
+Add dependency to your `Cargo.toml`.
 ```toml
 [dependencies]
-dyn-product = { git = "https://github.com/niumlaque/dyn-product", branch = "main" }
+dyn-product = "0.1"
 ```
 
 # Example

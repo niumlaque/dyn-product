@@ -5,4 +5,6 @@ authors = ["Niumlaque <niumlaque@gmail.com>"]
 description = "A crate that creates cartesian product of size determined at runtime."
 edition = "2021"
 
-[dependencies]
+license = "MIT"
+repository = "https://github.com/niumlaque/dyn-product"
+readme = "README.md"

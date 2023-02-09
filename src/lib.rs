@@ -7,7 +7,7 @@
 //! Add dependency to your toml.
 //! ```toml
 //! [dependencies]
-//! dyn-product = { git = "https://github.com/niumlaque/dyn-product", branch = "main" }
+//! dyn-product = "0.1"
 //! ```
 //!
 //! # Examples
