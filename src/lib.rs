@@ -99,7 +99,7 @@ impl<'a, T: 'a, I: AsSlice<Item = T>> Iterator for DynProduct<'a, T, I> {
     type Item = Vec<&'a T>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        if self.i[0] >= self.v[0].len() {
+        if self.v.is_empty() || self.i[0] >= self.v[0].len() {
             return None;
         }
 
@@ -228,7 +228,7 @@ mod tests {
         ];
 
         let p: Vec<_> = DynProduct::from(&data).collect();
-        assert_eq!(p.len(), data[0].len() * data[1].len() * data[2].len());
+        assert_eq!(p.len(), data.iter().map(|x| x.len()).product());
         assert_eq!(p[0], vec![&data[0][0], &data[1][0], &data[2][0]]);
         assert_eq!(p[1], vec![&data[0][0], &data[1][0], &data[2][1]]);
         assert_eq!(p[2], vec![&data[0][0], &data[1][0], &data[2][2]]);
@@ -253,5 +253,35 @@ mod tests {
         assert_eq!(p[21], vec![&data[0][2], &data[1][1], &data[2][1]]);
         assert_eq!(p[22], vec![&data[0][2], &data[1][1], &data[2][2]]);
         assert_eq!(p[23], vec![&data[0][2], &data[1][1], &data[2][3]]);
+    }
+
+    #[test]
+    fn test_zero_slice() {
+        let data: Vec<Vec<String>> = Vec::new();
+        let p: Vec<_> = DynProduct::from(&data).collect();
+        assert_eq!(p.len(), 0);
+    }
+
+    #[test]
+    fn test_one_slice() {
+        let data = vec![vec!["1", "2", "3"]];
+        let p: Vec<_> = DynProduct::from(&data).collect();
+        assert_eq!(p.len(), data.iter().map(|x| x.len()).product());
+        assert_eq!(p[0], vec![&data[0][0]]);
+        assert_eq!(p[1], vec![&data[0][1]]);
+        assert_eq!(p[2], vec![&data[0][2]]);
+    }
+
+    #[test]
+    fn test_two_slices() {
+        let data = vec![vec!["1", "2", "3"], vec!["a", "b"]];
+        let p: Vec<_> = DynProduct::from(&data).collect();
+        assert_eq!(p.len(), data.iter().map(|x| x.len()).product());
+        assert_eq!(p[0], vec![&data[0][0], &data[1][0]]);
+        assert_eq!(p[1], vec![&data[0][0], &data[1][1]]);
+        assert_eq!(p[2], vec![&data[0][1], &data[1][0]]);
+        assert_eq!(p[3], vec![&data[0][1], &data[1][1]]);
+        assert_eq!(p[4], vec![&data[0][2], &data[1][0]]);
+        assert_eq!(p[5], vec![&data[0][2], &data[1][1]]);
     }
 }
