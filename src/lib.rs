@@ -105,7 +105,10 @@ impl<'a, T: 'a, I: AsSlice<Item = T>> Iterator for DynProduct<'a, T, I> {
 
         let mut ret = Vec::with_capacity(self.v.len());
         for (i, x) in self.v.iter().map(|x| x.as_slice()).enumerate() {
-            ret.push(&x[self.i[i]]);
+            // Skip empty
+            if !x.is_empty() {
+                ret.push(&x[self.i[i]]);
+            }
         }
 
         countup(&mut self.i, self.v);
@@ -283,5 +286,19 @@ mod tests {
         assert_eq!(p[3], vec![&data[0][1], &data[1][1]]);
         assert_eq!(p[4], vec![&data[0][2], &data[1][0]]);
         assert_eq!(p[5], vec![&data[0][2], &data[1][1]]);
+    }
+
+    #[test]
+    fn test_inner_empty() {
+        let data = vec![
+            vec!["7"],
+            // This empty slice must be skipped
+            vec![],
+            vec!["x", "y"],
+        ];
+        let p: Vec<_> = DynProduct::from(&data).collect();
+        assert_eq!(p.len(), 2);
+        assert_eq!(p[0], vec![&data[0][0], &data[2][0]]);
+        assert_eq!(p[1], vec![&data[0][0], &data[2][1]]);
     }
 }
