@@ -1,0 +1,8 @@
+[package]
+name = "dyn-product"
+version = "0.1.0"
+authors = ["Niumlaque <niumlaque@gmail.com>"]
+description = "A crate that creates cartesian product of size determined at runtime."
+edition = "2021"
+
+[dependencies]
